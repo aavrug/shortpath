@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='shortpath',
-    version='1.0',
+    version='1.0.1',
     description="Shortpath provides a small name for your long project paths.",
     keywords='shortpath',
     author='Gaurav Kumar',
