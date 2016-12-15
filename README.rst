@@ -29,4 +29,9 @@ Usage
 
     shortpath --s <any string>
 
+Under Development
+======================================================
+
+Deletion of existing short name or path.
+
 Homepage: https://github.com/aavrug/shortpath
