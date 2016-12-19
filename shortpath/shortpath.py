@@ -15,7 +15,9 @@ def _get_username():
 def _bash_file():
     return '/home/'+_get_username()+'/.bashrc'
 
-def setpath(path, alias):
+def setpath(path, alias, delete):
+    if delete:
+        return _delete_confirmation(path, alias)
     message = _check(path, alias)
     if message != 'All good!':
         return message
@@ -48,6 +50,13 @@ def _alias_exist(alias):
             return True
     return False
 
+def _command_exist(path, alias):
+    f = open(_bash_file(), 'r')
+    for line in f.readlines():
+        if re.search("^alias "+alias+"='cd "+path+"'$", line) or re.search("^alias "+alias+"='cd "+_trailing_slash_path(path)+"'$", line):
+            return True
+    return False
+
 def _write_alias(path, alias):
     if not alias:
         alias = _generate_alias(path)
@@ -73,3 +82,39 @@ def _trailing_slash_path(path):
         return path.rstrip('/')
     else:
         return path+'/'
+
+def _delete_confirmation(path, alias):
+    if raw_input('Are you sure you want to delete this shortpath?[y,N]: ') == 'y':
+        return _delete(path, alias)
+    return 'Aborted!'
+
+def _delete(path, alias):
+    if path and alias:
+        if _command_exist(path, alias) and _search_path(path) and _alias_exist(alias):
+            return _delete_by_path_and_alias(path, alias)
+    return 'This path and shortname combination doesn\'t exist!'
+
+def _delete_by_path_and_alias(path, alias):
+    fileData = _get_file_data()
+    f = open(_bash_file(), 'w')
+    command = _get_command(path, alias)
+    tCommand = _get_command(path, alias, True)
+    for line in fileData:
+        if not command in line and not tCommand in line:
+            f.write(line)
+    f.close()
+    return 'Successfully, deleted your shortpath!'
+
+def _get_file_data():
+    f = open(_bash_file(), 'r')
+    fileData = f.readlines()
+    f.close()
+    return fileData
+
+def _get_command(path, alias, trail = False):
+    command = "alias "+alias+"='cd "
+    if trail:
+        path = _trailing_slash_path(path)
+    command += path+"'"
+
+    return command

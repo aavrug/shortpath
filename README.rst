@@ -29,9 +29,8 @@ Usage
 
     shortpath --s <any string>
 
-Under Development
-======================================================
+    shortpath --p <path from /home...> --s <any string> --d
 
-Deletion of existing short name or path.
+    shortpath --s <any string> --d
 
 Homepage: https://github.com/aavrug/shortpath
